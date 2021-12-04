@@ -6,5 +6,4 @@
 #include <fstream>
 #include <regex>
 #include "error.h"
-
 #endif
