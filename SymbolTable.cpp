@@ -8,7 +8,7 @@ void SymbolTable::run(string filename)
     if (!my_file) cout<<"No such file.";
 
     //check first line (settings) and extract para 1 (hash table's size)
-    regex regex_settings("(LINEAR|QUADRATIC|DOUBLE|INSERT|ASSIGN|BEGIN|LOOKUP|END|PRINT)(\\s[0-9]{1,6})(\\s[0-9]{1,6})");
+    regex regex_settings("(LINEAR|QUADRATIC|DOUBLE|INSERT|ASSIGN|BEGIN|LOOKUP|END|PRINT)(\\s[0-9]{1,6})(\\s[0-9]{1,6})(\\s[0-9]{1,6})?");
     string settings;
     getline(my_file, settings);
         if (!regex_match(settings, regex_settings)){
@@ -44,9 +44,13 @@ void SymbolTable::run(string filename)
         regex_search(instruction, match_extra, regex_extra);
 
         if (match_command[0] == "INSERT"){
-            cout<<match_extra[0].str();
-            cout<<HT->HashFunc(match_extra[0].str());
+            int key = HT->HashFunc(HT->encode(match_extra[0].str()));
+            HT->Insert(key, match_extra[0].str());
         }
+        else if (match_command[0] == "PRINT"){
+            HT->print();
+        }
+        cout<<"iter";
     }
     
     cout<< "success";

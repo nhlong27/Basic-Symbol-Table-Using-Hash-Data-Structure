@@ -13,8 +13,8 @@ public:
 class HashTableEntry{
 public:
     int k;
-    int v;
-    HashTableEntry(int k, int v){
+    string v;
+    HashTableEntry(int k, string v){
         this->k = k;
         this->v = v;
     }
@@ -46,7 +46,7 @@ public:
     //     }
     //     return a;
     // }
-    int HashFunc(string id){
+    int encode(string id){
         unsigned long a;
         unsigned long b = 0;
         for (int i = 0; id[i]; i++){
@@ -58,7 +58,23 @@ public:
             }
             a = a*times + b;
         }
-        return a % size;    
+        return a;
+    }
+    int HashFunc(int k){
+        return k % size;    
+    }
+    void Insert(int k, string v) {
+        int h = HashFunc(k);
+        while (t[h] != NULL && t[h]->k != k) {
+            h = HashFunc(h + 1);
+        }
+        if (t[h] != NULL) delete t[h];
+        t[h] = new HashTableEntry(k, v);
+    }
+    void print(){
+        for (int i = 0; i<size; i++){
+            if (t[i]) cout<<i<<" "<<t[i]->v<<endl;
+        }
     }
     ~HashTable() {
         for (int i = 0; i < size; i++) {
