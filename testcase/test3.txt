@@ -1,4 +1,8 @@
-INSERT x number
-INSERT y string
-ASSIGN z n15
-ASSIGN y n76
+LINEAR 19 1
+INSERT x
+INSERT sum 2
+ASSIGN x 1
+ASSIGN x sum(5,x)
+INSERT z
+INSERT foo 1
+ASSIGN z foo('abc')

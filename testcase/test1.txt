@@ -1,4 +1,4 @@
-INSERT x number
-INSERT y string
-ASSIGN x n15
-ASSIGN y n76
+LINEAR 19 1
+INSERT a1
+INSERT b2
+INSERT rj 2

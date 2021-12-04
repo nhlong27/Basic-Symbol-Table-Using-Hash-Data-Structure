@@ -1,3 +1,4 @@
-INSERT x number
-INSERT y string
-INSERT x number
+LINEAR 19 1
+INSERT x
+INSERT y
+INSERT x

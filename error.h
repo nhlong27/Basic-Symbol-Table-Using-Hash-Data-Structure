@@ -62,6 +62,20 @@ public:
         return mess.c_str();
     }
 };
+class InvalidDeclaration : public exception
+{
+    string mess;
+
+public:
+    InvalidDeclaration(string instruction)
+    {
+        mess = "InvalidDeclaration: " + instruction;
+    }
+    const char *what() const throw()
+    {
+        return mess.c_str();
+    }
+};
 class UnclosedBlock : public exception
 {
     string mess;
@@ -84,6 +98,35 @@ public:
     UnknownBlock()
     {
         mess = "UnknownBlock";
+    }
+    const char *what() const throw()
+    {
+        return mess.c_str();
+    }
+};
+class Overflow : public exception
+{
+    string mess;
+
+public:
+    Overflow(string instruction)
+    {
+        mess = "Overflow: " + instruction;
+    }
+    const char *what() const throw()
+    {
+        return mess.c_str();
+    }
+};
+
+class TypeCannotBeInferred : public exception
+{
+    string mess;
+
+public:
+    TypeCannotBeInferred(string instruction)
+    {
+        mess = "TypeCannotBeInferred: " + instruction;
     }
     const char *what() const throw()
     {

@@ -1,5 +1,6 @@
 #include "SymbolTable.h"
 
-void SymbolTable::run(string filename) {
+void SymbolTable::run(string filename)
+{
     cout << "success";
 }
