@@ -24,9 +24,13 @@ class HashTable {
 private:
     HashTableEntry **t;
     int size;
+    int c1;
+    int c2;
 public:
-    HashTable(int size){
+    HashTable(int size, int c1, int c2){
         this->size = size;
+        this->c1 = c1;
+        this->c2 = c2;
         t = new HashTableEntry*[size];
         for (int i = 0; i<size; i++){
             t[i] = nullptr;

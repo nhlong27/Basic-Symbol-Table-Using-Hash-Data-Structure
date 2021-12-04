@@ -1,4 +1,5 @@
 #include "SymbolTable.h"
+using namespace std;
 
 void SymbolTable::run(string filename)
 {
@@ -16,41 +17,50 @@ void SymbolTable::run(string filename)
     }
 
     regex regex_settings_para("([0-9]{1,6})");
-    smatch match_settings_para;
-    regex_search(settings, match_settings_para, regex_settings_para);
-    // //<sstream> disallowed
-    // int y;
-    // stringstream s(match_settings_para[0]);
-    // s >> y;
-    // unsigned int i = static_cast<unsigned int>(match_settings_para[0]);
-    int hashtable_size = std::stoi(match_settings_para[0].str());
-    HashTable* HT = new HashTable(hashtable_size);
+    int array[3] = {0,0,0};
+    int i = 0;
+    for(std::sregex_iterator iter = std::sregex_iterator(settings.begin(), settings.end(), regex_settings_para); iter != std::sregex_iterator(); ++iter )
+        {
+            std::smatch m = *iter;
+            array[i] = std::stoi(m.str());
+            i++;
+        }
+    HashTable* HT = new HashTable(array[0],array[1],array[2]);
 
     //check instructions and main body
-    regex regex_instruction("(INSERT|ASSIGN|BEGIN|LOOKUP|END|PRINT)(\\s([0-9]+|\'[a-z0-9\\s]+\'|[a-z][a-zA-Z_0-9]*|[a-z][a-zA-Z_0-9]*\\(([0-9]+|\'[a-z0-9\\s]+\'|[a-z][a-zA-Z_0-9]*|\\,)+\\)))?(\\s([0-9]+|\'[a-z0-9\\s]+\'|[a-z][a-zA-Z_0-9]*|[a-z][a-zA-Z_0-9]*\\(([0-9]+|\'[a-z0-9\\s]+\'|[a-z][a-zA-Z_0-9]*|\\,)+\\)))?");
+    regex regex_instruction("(INSERT|ASSIGN|BEGIN|LOOKUP|END|PRINT)(\\s([0-9]+|\'[a-z0-9\\s]+\'|[a-z][a-zA-Z_0-9]*|(\\(([0-9]+|\'[a-z0-9\\s]+\'|[a-z][a-zA-Z_0-9]*|\\,)+\\))))?(\\s([0-9]+|\'[a-z0-9\\s]+\'|[a-z][a-zA-Z_0-9]*|(\\(([0-9]+|\'[a-z0-9\\s]+\'|[a-z][a-zA-Z_0-9]*|\\,)+\\))))?");
 
     regex regex_command("(INSERT|ASSIGN|BEGIN|LOOKUP|END|PRINT)");
-    regex regex_extra("([0-9]+|\'[a-z0-9\\s]+\'|[a-z][a-zA-Z_0-9]*|[a-z][a-zA-Z_0-9]*\\(([0-9]+|\'[a-z0-9\\s]+\'|[a-z][a-zA-Z_0-9]*|\\,)+\\))");
-
+    regex regex_extra("([0-9]+|\'[a-z0-9\\s]+\'|[a-z][a-zA-Z_0-9]*|(\\(([0-9]+|\'[a-z0-9\\s]+\'|[a-z][a-zA-Z_0-9]*|\\,)+\\)))");
+    // char regex_extra2[] = "[a-z][a-zA-Z_0-9]*\'[0-9]+|\'[a-z0-9\\s]+\'|[a-z][a-zA-Z_0-9]*|\\,+\'";
+    // [a-z][a-zA-Z_0-9]*\'[0-9]+|\'[a-z0-9\\s]+\'|[a-z][a-zA-Z_0-9]*|\\,\'
     string instruction;
     while(getline(my_file, instruction)){
         if (!regex_match(instruction, regex_instruction)){
 
             throw InvalidInstruction(instruction);
         }
-
-        smatch match_command, match_extra;
+        smatch match_command;
         regex_search(instruction, match_command, regex_command);
-        regex_search(instruction, match_extra, regex_extra);
+
+        string a[10] = {"0", "0", "0", "0", "0", "0", "0", "0", "0", "0"};
+        int i = 0;
+
+        for(std::sregex_iterator iter = std::sregex_iterator(instruction.begin(), instruction.end(), regex_extra); iter != std::sregex_iterator(); ++iter )
+        {
+            std::smatch m = *iter;
+            a[i] = m.str();
+            i++;
+        }
 
         if (match_command[0] == "INSERT"){
-            int key = HT->HashFunc(HT->encode(match_extra[0].str()));
-            HT->Insert(key, match_extra[0].str());
+            int key = HT->HashFunc(HT->encode(a[0]));
+            HT->Insert(key, a[0]);
         }
         else if (match_command[0] == "PRINT"){
             HT->print();
         }
-        cout<<"iter";
+        cout<<a[0]<<" "<<a[1]<<" "<<a[2]<<" "<<a[3]<<" "<<a[4]<<endl;
     }
     
     cout<< "success";
