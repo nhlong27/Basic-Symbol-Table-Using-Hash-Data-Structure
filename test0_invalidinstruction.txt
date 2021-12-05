@@ -1,9 +1,0 @@
-QUADRATIC 123456 1 2
-INSERT z (1,2,a,'5')
-INSERT x0_ (a)
-ASSIGN x0_ 'a1 '
-ASSIGN x0_(1,a) y0_('abc',y)
-BEGIN
-END
-LOOKUP x0_
-PRINT

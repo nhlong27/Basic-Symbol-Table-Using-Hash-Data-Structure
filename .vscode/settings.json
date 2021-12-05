@@ -3,6 +3,7 @@
     "iostream": "cpp",
     "xstring": "cpp",
     "regex": "cpp",
-    "sstream": "cpp"
+    "sstream": "cpp",
+    "iosfwd": "cpp"
   }
 }

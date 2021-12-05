@@ -9,11 +9,12 @@ public:
     void run(string filename);
 };
 
-
 class HashTableEntry{
 public:
     int k;
     string v;
+    int rebound = 1;
+    int scope;
     HashTableEntry(int k, string v){
         this->k = k;
         this->v = v;
@@ -21,11 +22,13 @@ public:
 };
 
 class HashTable {
-private:
+public:
     HashTableEntry **t;
     int size;
     int c1;
     int c2;
+    int scope;
+    string probeType;
 public:
     HashTable(int size, int c1, int c2){
         this->size = size;
@@ -36,20 +39,6 @@ public:
             t[i] = nullptr;
         }
     }
-    // int encode(string id){
-    //     unsigned long a;
-    //     unsigned long b = 0;
-    //     for (int i = 0; id[i]; i++){
-    //         a = b;
-    //         b = id[i] - 48;
-    //         int times = 1;
-    //         while (times <= b){
-    //             times *= 10;
-    //         }
-    //         a = a*times + b;
-    //     }
-    //     return a;
-    // }
     int encode(string id){
         unsigned long a;
         unsigned long b = 0;
@@ -67,26 +56,58 @@ public:
     int HashFunc(int k){
         return k % size;    
     }
-    void Insert(int k, string v) {
-        int h = HashFunc(k);
-        while (t[h] != NULL && t[h]->k != k) {
-            h = HashFunc(h + 1);
+    void Insert(HashTableEntry *temp) {
+        int h = HashFunc(temp->k);
+        while (t[h] != nullptr && t[h]->k != temp->k) {
+            if (probeType == "LINEAR"){
+                h = HashFunc(h + temp->rebound*c1);
+            }
+            else if (probeType == "QUADRATIC"){
+                h = HashFunc(h + temp->rebound*c1 + temp->rebound*temp->rebound*c2);
+            }
+            else if (probeType == "DOUBLE"){
+                int h2 = 1 + (temp->k % (size - 2));
+                h = HashFunc(h + temp->rebound*c1*h2);
+            }
+            ++(temp->rebound);
         }
-        if (t[h] != NULL) delete t[h];
-        t[h] = new HashTableEntry(k, v);
+        if (t[h] != nullptr) delete t[h];
+        t[h] = temp;
+        temp->scope = scope;
+        // cout<<D;
+    }
+    int SearchKey(HashTableEntry *temp) {
+        int h = HashFunc(temp->k);
+        while (t[h] != nullptr && t[h]->k != temp->k) {
+            if (probeType == "LINEAR"){
+                h = HashFunc(h + temp->rebound*c1);
+            }
+            else if (probeType == "QUADRATIC"){
+                h = HashFunc(h + temp->rebound*c1 + temp->rebound*temp->rebound*c2);
+            }
+            else if (probeType == "DOUBLE"){
+                int h2 = 1 + (temp->k % (size - 2));
+                h = HashFunc(h + temp->rebound*c1*h2);
+            }
+            ++(temp->rebound);
+        }
+        if (t[h] == nullptr)
+            return -1;
+        else
+            return h;
     }
     void print(){
         for (int i = 0; i<size; i++){
-            if (t[i]) cout<<i<<" "<<t[i]->v<<endl;
+            if (t[i]) cout<<i<<" "<<t[i]->v<<"//"<<t[i]->scope<<";";
         }
     }
     ~HashTable() {
         for (int i = 0; i < size; i++) {
-        if (t[i] != nullptr)
-            delete t[i];
-            delete[] t;
+            if (t[i] != nullptr)
+                delete t[i];
+                delete[] t;
+            }
         }
-      }
 };
 
 
