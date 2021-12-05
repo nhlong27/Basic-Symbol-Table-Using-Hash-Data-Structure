@@ -51,7 +51,7 @@ void mainBody(HashTable *HT, fstream& my_file, int scope){
             HashTableEntry *temp = new HashTableEntry(key, a[0]);
             int h = HT->SearchKey(temp);
             if (h == -1) throw Undeclared(temp->v);
-            rebound1 = temp->rebound-1;
+            rebound1 = HT->t[h]->rebound-1;
             int i = HT->t[h]->para;
             
             if (i>0){
@@ -61,7 +61,7 @@ void mainBody(HashTable *HT, fstream& my_file, int scope){
                         HashTableEntry *temp3 = new HashTableEntry(key3, a[j]);
                         int h3 = HT->SearchKey(temp3);
                         if (h3 == -1) throw Undeclared(temp3->v);
-                        rebound_para1 += temp3->rebound-1;
+                        rebound_para1 += HT->t[h3]->rebound-1;
                     }
                 }
             }
@@ -82,22 +82,22 @@ void mainBody(HashTable *HT, fstream& my_file, int scope){
                 HashTableEntry *temp2 = new HashTableEntry(key2, a[i+1]);
                 int h2 = HT->SearchKey(temp2);
                 if (h2 == -1) throw Undeclared(temp2->v);
-                rebound2 = temp2->rebound-1;
+                rebound2 = HT->t[h2]->rebound-1;
                 if (HT->t[h]->type == "none" && HT->t[h2]->type != "none") HT->t[h]->type = HT->t[h2]->type; 
                 else if (HT->t[h]->type != "none" && HT->t[h2]->type == "none") HT->t[h2]->type = HT->t[h]->type;
                 else if (HT->t[h]->type == "none" && HT->t[h2]->type == "none") throw TypeCannotBeInferred(instruction);
                 else if (HT->t[h]->type != HT->t[h2]->type) throw TypeMismatch(instruction);
-                if (temp2->para>0){
-                for (int j=1;j<=temp2->para;j++){
-                    if (regex_match(a[j].begin(),a[j].end(),regex_checkid)){
-                        int key4 = HT->encode(a[j]);
-                        HashTableEntry *temp4 = new HashTableEntry(key4, a[j]);
-                        int h4 = HT->SearchKey(temp4);
-                        if (h4 == -1) throw Undeclared(temp4->v);
-                        rebound_para2 += temp4->rebound-1;
+                if (HT->t[h2]->para>0){
+                    for (int j=1;j<=HT->t[h2]->para;j++){
+                        if (regex_match(a[j].begin(),a[j].end(),regex_checkid)){
+                            int key4 = HT->encode(a[j]);
+                            HashTableEntry *temp4 = new HashTableEntry(key4, a[j]);
+                            int h4 = HT->SearchKey(temp4);
+                            if (h4 == -1) throw Undeclared(temp4->v);
+                            rebound_para2 += HT->t[h4]->rebound-1;
+                        }
                     }
                 }
-            }
             }
             cout<<rebound1 + rebound2 + rebound_para1 + rebound_para2<<endl;
         }
