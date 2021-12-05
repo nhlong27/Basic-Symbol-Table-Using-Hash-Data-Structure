@@ -1,0 +1,9 @@
+LINEAR 19 1
+ASSIGN a1 5
+ASSIGN a1 'b'
+ASSIGN a1 b1
+ASSIGN a1(1,c) 5
+ASSIGN a1(1,c,d) 'b'
+ASSIGN a1(1,c,e,f) b1
+ASSIGN a1 b1(1,c)
+ASSIGN a1(1,c) b1(1,c)

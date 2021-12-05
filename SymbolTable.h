@@ -15,6 +15,8 @@ public:
     string v;
     int rebound = 1;
     int scope;
+    string type = "none";
+    int para = 0;
     HashTableEntry(int k, string v){
         this->k = k;
         this->v = v;
@@ -51,6 +53,11 @@ public:
             }
             a = a*times + b;
         }
+        int times2 = 1;
+        while (times2 <= a){
+            times2 *= 10;
+        }
+        a = scope*times2 + a;
         return a;
     }
     int HashFunc(int k){
