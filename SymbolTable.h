@@ -42,10 +42,9 @@ public:
         }
     }
     int encode(string id){
-        unsigned long a;
-        unsigned long b = 0;
+        int a = 0;
+        int b = 0;
         for (int i = 0; id[i]; i++){
-            a = b;
             b = id[i] - 48;
             int times = 1;
             while (times <= b){
@@ -63,9 +62,11 @@ public:
     int HashFunc(int k){
         return k % size;    
     }
-    void Insert(HashTableEntry *temp) {
+    int Insert(HashTableEntry *temp) {
         int h = HashFunc(temp->k);
+        // cout<<h<<" ";
         while (t[h] != nullptr && t[h]->k != temp->k) {
+            if (temp->rebound > this->size) return temp->rebound;
             if (probeType == "LINEAR"){
                 h = HashFunc(h + temp->rebound*c1);
             }
@@ -76,11 +77,13 @@ public:
                 int h2 = 1 + (temp->k % (size - 2));
                 h = HashFunc(h + temp->rebound*c1*h2);
             }
-            ++(temp->rebound);
+            (temp->rebound)++;
         }
-        if (t[h] != nullptr) delete t[h];
+        if (t[h] != nullptr && t[h]->k == temp->k) return -1;
         t[h] = temp;
         temp->scope = scope;
+        // cout<<temp->rebound<<"rebound";
+        return temp->rebound -1;
         // cout<<D;
     }
     int SearchKey(HashTableEntry *temp) {
@@ -104,17 +107,23 @@ public:
             return h;
     }
     void print(){
+        string semi = "";
         for (int i = 0; i<size; i++){
-            if (t[i]) cout<<i<<" "<<t[i]->v<<"//"<<t[i]->scope<<";";
+            if (t[i]) {
+                cout<<semi<<i<<" "<<t[i]->v<<"//"<<t[i]->scope;
+                semi = ";";
+            }
         }
+        cout<<endl;
     }
     ~HashTable() {
         for (int i = 0; i < size; i++) {
-            if (t[i] != nullptr)
+            if (t[i] != nullptr){
                 delete t[i];
-                delete[] t;
             }
+            delete[] t;
         }
+    }
 };
 
 
